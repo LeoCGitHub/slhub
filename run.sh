@@ -1,0 +1,1 @@
+docker compose -f docker/keycloak/compose.yaml up -d

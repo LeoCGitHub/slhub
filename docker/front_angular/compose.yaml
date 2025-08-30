@@ -1,0 +1,28 @@
+services:
+  frontend_angular:
+    image: angular-frontend:dev
+    container_name: angular-frontend
+    restart: always
+    # Volumes pour le développement (optionnel)
+    volumes:
+      - /volumes/img:/usr/share/nginx/html/assets/img
+      - /volumes/i18n:/usr/share/nginx/html/assets/i18n
+    #   - ./src:/app/src
+    #   - ./angular.json:/app/angular.json
+    #   - ./tsconfig.json:/app/tsconfig.json
+    ports:
+      - "4200:4200"
+    env_file:
+      - env/frontend.env
+    networks:
+      - services
+    healthcheck:
+      test: wget -q -O /dev/null http://localhost:3000/health || exit 1
+      interval: 5s
+      timeout: 30s
+      retries: 30
+
+networks:
+  services:
+    name: lcg-solutions
+    # TODO LCG check example real

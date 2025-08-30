@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: postgres:14-alpine
+    container_name: postgresql-14
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    ports:
+      - 5432:5432
+    volumes:
+#      - ./volumes/data:/var/lib/postgresql/data
+      - ./volumes/script/create-db.sql:/docker-entrypoint-initdb.d/create_database.sql
+    env_file:
+      - ./volumes/env/config.env
+    networks:
+      - services
+
+networks:
+  services:
+    name: lcg-solutions
