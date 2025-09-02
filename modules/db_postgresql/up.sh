@@ -1,0 +1,1 @@
+docker compose -f /home/lcg/workspaces/db_postgresql/docker/docker-compose.yml up -d

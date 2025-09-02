@@ -1,14 +1,12 @@
 Pour une architecture de microservices avec un hub centralisé Keycloak, APIs REST et messaging, voici des technologies recommandées :
 
-Gestion d'identité et sécurité
-Keycloak : solution open-source de gestion d'identité et d'accès, compatible OAuth2/OpenID Connect, facile à intégrer comme serveur d'authentification centralisé.
+Gestion d'identité et sécuritéchekc
+[x] Keycloak : solution open-source de gestion d'identité et d'accès, compatible OAuth2/OpenID Connect, facile à intégrer comme serveur d'authentification centralisé.
 
 API Gateway
 Spring Cloud Gateway (Java/Spring) : flexible, performant, intégration native avec Keycloak via OAuth2
 
 Kong ou Traefik : gateways cloud-native, supportent l’authentification Keycloak
-
-Ocelot (pour .NET) si stack Microsoft
 
 Microservices REST
 Spring Boot (Java) : framework mature pour créer des microservices robustes et sécurisés

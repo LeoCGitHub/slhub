@@ -1,0 +1,1 @@
+docker compose -f /home/lcg/workspaces/front_angular/package/compose.yaml up -d
