@@ -1,19 +1,7 @@
-pushd modules
+#!/bin/bash
 
-docker compose -f keycloak/compose.yaml up -d
+# Création du réseau partagé si nécessaire
+docker network create lcg-solutions 2>/dev/null || true
 
-# DB
-bash db_postgresql/up.sh
-bash db_mongodb/up.sh
-
-# BACKENDS
-bash back_nodejs_nest/up.sh
-
-# FRONTENDS
-# bash front_angular/up.sh
-# bash front-react/up.sh
-
-# PROMETHEUS/GRAFANA
-docker compose -f prometheus_grafana/compose.yaml up -d
-
-popd
+# Lancement de tous les modules via le docker-compose principal
+docker compose up -d

@@ -1,1 +1,0 @@
-docker compose -f /home/lcg/workspaces/db_mongodb/docker/docker-compose.yml up -d

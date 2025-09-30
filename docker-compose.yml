@@ -1,0 +1,28 @@
+# Docker Compose principal pour le hub slhub
+# Gère tous les modules de la solution
+
+include:
+  # Infrastructure - Kong API Gateway
+  - path: ./infrastructure/kong/compose.yaml
+
+  # Infrastructure - Keycloak (auth centralisée)
+  - path: ./infrastructure/keycloak/compose.yaml
+
+  # Infrastructure - Monitoring (Prometheus + Grafana)
+  - path: ./infrastructure/monitoring/compose.yaml
+
+  # Bases de données
+  - path: /home/lcg/workspaces/db_postgresql/docker/docker-compose.yml
+  - path: /home/lcg/workspaces/db_mongodb/docker/docker-compose.yml
+
+  # Backends
+  - path: /home/lcg/workspaces/back_nodejs_nest/package/compose.yaml
+
+  # Frontends
+  # - path: /home/lcg/workspaces/front_angular/docker/docker-compose.yml
+  # - path: /home/lcg/workspaces/front_react/docker/docker-compose.yml
+
+networks:
+  lcg-solutions:
+    name: lcg-solutions
+    driver: bridge

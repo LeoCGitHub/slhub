@@ -1,1 +1,0 @@
-docker compose -f /home/lcg/workspaces/front_react/package/compose.yaml down

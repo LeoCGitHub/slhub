@@ -1,23 +1,29 @@
 {
-  "folders": [
-	{
-		"path": "."
-	},
-	{
-		"path": "../db_mongodb"
-	},
-	{
-		"path": "../db_postgresql"
-	},
-	{
-		"path": "../back_nodejs_nest"
-	},
-	{
-		"path": "../front_angular"
-	},
-	{
-		"path": "../front_react"
-	}
-],
-  "settings": {}
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../db_mongodb"
+		},
+		{
+			"path": "../db_postgresql"
+		},
+		{
+			"path": "../back_nodejs_nest"
+		},
+		{
+			"path": "../front_angular"
+		},
+		{
+			"path": "../front_react"
+		},
+		{
+			"path": "../slchat"
+		},
+		{
+			"path": "../backend_java"
+		}
+	],
+	"settings": {}
 }

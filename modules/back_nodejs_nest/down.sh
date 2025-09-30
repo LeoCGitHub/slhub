@@ -1,1 +1,0 @@
-docker compose -f /home/lcg/workspaces/back_nodejs_nest/package/compose.yaml down
