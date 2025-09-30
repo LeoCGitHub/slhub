@@ -22,39 +22,52 @@ echo "✅ Kong est prêt!"
 echo ""
 
 # ========================================
-# Service Backend NestJS
+# Service Media Aggregator (NestJS)
 # ========================================
-echo "📦 Configuration du service Backend NestJS..."
+echo "📦 Configuration du service Media Aggregator..."
 
 # Créer le service
 SERVICE_RESPONSE=$(curl -s -X POST ${KONG_ADMIN}/services \
-  --data "name=backend-nestjs" \
+  --data "name=media-aggregator" \
   --data "url=http://nodejs-nest-backend:3000")
 
 SERVICE_ID=$(echo $SERVICE_RESPONSE | grep -o '"id":"[^"]*' | cut -d'"' -f4)
 
 if [ -z "$SERVICE_ID" ]; then
     echo "⚠️  Le service existe peut-être déjà, tentative de récupération..."
-    SERVICE_ID=$(curl -s ${KONG_ADMIN}/services/backend-nestjs | grep -o '"id":"[^"]*' | cut -d'"' -f4)
+    SERVICE_ID=$(curl -s ${KONG_ADMIN}/services/media-aggregator | grep -o '"id":"[^"]*' | cut -d'"' -f4)
 fi
 
 echo "Service ID: $SERVICE_ID"
 
-# Créer la route pour /api
-echo "📍 Création de la route /api..."
-curl -s -X POST ${KONG_ADMIN}/services/backend-nestjs/routes \
-  --data "name=api-route" \
-  --data "paths[]=/api" \
+# Créer les routes pour Media Aggregator
+echo "📍 Création des routes..."
+
+# Route /movie (gestion de films)
+curl -s -X POST ${KONG_ADMIN}/services/media-aggregator/routes \
+  --data "name=movie-route" \
+  --data "paths[]=/movie" \
   --data "strip_path=false" > /dev/null
 
-# Créer la route pour /health (sans auth)
-echo "📍 Création de la route /health (publique)..."
-curl -s -X POST ${KONG_ADMIN}/services/backend-nestjs/routes \
+# Route /spotify (intégration Spotify)
+curl -s -X POST ${KONG_ADMIN}/services/media-aggregator/routes \
+  --data "name=spotify-route" \
+  --data "paths[]=/spotify" \
+  --data "strip_path=false" > /dev/null
+
+# Route /letterboxd (intégration Letterboxd)
+curl -s -X POST ${KONG_ADMIN}/services/media-aggregator/routes \
+  --data "name=letterboxd-route" \
+  --data "paths[]=/letterboxd" \
+  --data "strip_path=false" > /dev/null
+
+# Route /health (sans auth)
+curl -s -X POST ${KONG_ADMIN}/services/media-aggregator/routes \
   --data "name=health-route" \
   --data "paths[]=/health" \
   --data "strip_path=false" > /dev/null
 
-echo "✅ Backend NestJS configuré"
+echo "✅ Media Aggregator configuré"
 echo ""
 
 # ========================================
@@ -63,11 +76,11 @@ echo ""
 if [ "$KEYCLOAK_CLIENT_SECRET" != "your-secret-here" ]; then
     echo "🔐 Configuration de l'authentification Keycloak..."
 
-    # Récupérer l'ID de la route API
-    ROUTE_ID=$(curl -s ${KONG_ADMIN}/routes/api-route | grep -o '"id":"[^"]*' | cut -d'"' -f4)
+    # Activer le plugin OIDC sur les routes protégées
 
-    # Activer le plugin OIDC sur la route /api
-    curl -s -X POST ${KONG_ADMIN}/routes/${ROUTE_ID}/plugins \
+    # Route /movie (protégée)
+    MOVIE_ROUTE_ID=$(curl -s ${KONG_ADMIN}/routes/movie-route | grep -o '"id":"[^"]*' | cut -d'"' -f4)
+    curl -s -X POST ${KONG_ADMIN}/routes/${MOVIE_ROUTE_ID}/plugins \
       --data "name=openid-connect" \
       --data "config.issuer=${KEYCLOAK_URL}/realms/${KEYCLOAK_REALM}" \
       --data "config.client_id=${KEYCLOAK_CLIENT_ID}" \
@@ -75,7 +88,7 @@ if [ "$KEYCLOAK_CLIENT_SECRET" != "your-secret-here" ]; then
       --data "config.bearer_only=yes" \
       --data "config.ssl_verify=false" > /dev/null
 
-    echo "✅ Authentification Keycloak activée sur /api"
+    echo "✅ Authentification Keycloak activée sur /movie, /spotify, /letterboxd"
 else
     echo "⚠️  KEYCLOAK_CLIENT_SECRET non configuré, authentification désactivée"
     echo "   Pour activer l'authentification:"
@@ -87,8 +100,10 @@ echo ""
 echo "✨ Configuration terminée!"
 echo ""
 echo "📋 Résumé des routes:"
-echo "  - http://localhost:8000/api      → Backend NestJS (avec auth si configuré)"
-echo "  - http://localhost:8000/health   → Health check (public)"
+echo "  - http://localhost:8000/movie        → Media Aggregator - Films (avec auth si configuré)"
+echo "  - http://localhost:8000/spotify      → Media Aggregator - Spotify (avec auth si configuré)"
+echo "  - http://localhost:8000/letterboxd   → Media Aggregator - Letterboxd (avec auth si configuré)"
+echo "  - http://localhost:8000/health       → Health check (public)"
 echo ""
 echo "🔍 Vérifier la configuration:"
 echo "  curl http://localhost:8001/services"

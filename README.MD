@@ -26,7 +26,7 @@ La stack technique est documentée dans le README de chaque service.
 
 | Service | Stack | Description | Port | Repo |
 |---------|-------|-------------|------|------|
-| user-service | NestJS + PostgreSQL | Gestion utilisateurs et auth | 3000 | [Lien](#) |
+| media-aggregator | NestJS + MongoDB + PostgreSQL | Agrégation médias (Spotify, Letterboxd, Films) | 3000 | [back_nodejs_nest](../back_nodejs_nest) |
 | front-angular | Angular | Interface principale | 4200 | [Lien](#) |
 
 ### Ajouter un nouveau microservice
